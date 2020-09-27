@@ -1,15 +1,26 @@
 <template>
   <div id="home" class="wrapper">
+    <!--导航栏-->
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
-    <scroll class="content" ref="scroll">
+    <!--scroll是滚动效果组件-->
+    <scroll class="content" ref="scroll"
+            :probeType="3"
+            @scroll="contentScroll"
+            :pull-up-load="true"
+            @pullingUp="loadMore">
+      <!--商品轮播图-->
       <home-swiper :banners="banners"/>
+      <!--推荐商品-->
       <recommend-view :recommends="recommends"/>
+      <!--本周流行-->
       <feature-view/>
+      <!--商品分类切换控制栏-->
       <tab-control :titles="['流行','新款','流行']" class="tab-control" @tabClick="tabClick"/>
+      <!--商品展示-->
       <goods-list :goods="showGoods"/>
     </scroll>
 
-    <back-top @click.native="backClick"/>
+    <back-top @click.native="backClick" v-show="isShowBackTop"/>
   </div>
 </template>
 
@@ -47,7 +58,8 @@
           'new': {page:0, list:[]},
           'sell': {page:0, list:[]}
         },
-        currentType: 'pop', //传入商品数据的类型的初始值，初始值为pop
+        currentType: 'pop', //传入商品数据的类型的初始值，初始值为pop,
+        isShowBackTop: false
       }
     },
     created() {
@@ -59,6 +71,11 @@
       this.getHomeGoods('new');
       this.getHomeGoods('sell');
 
+      //3.图片加载完成监听事件
+      this.$bus.$on('itemImageLoad', () => {
+        //最后进行刷新图片的高度
+        this.$refs.scroll.refresh();
+      })
     },
     computed: {
       showGoods(){
@@ -83,9 +100,17 @@
         }
       },
       backClick() {
+        //实时监听滚动的位置
         this.$refs.scroll.scrollTo(0,0);
       },
-
+      contentScroll(position){
+        //回到顶部图标是否显示
+        this.isShowBackTop = (-position.y) > 1000;
+      },
+      loadMore(){
+        //上拉加载更多也就是再一次的请求商品数据
+        this.getHomeGoods(this.currentType);
+      },
       /*
       * 网络请求相关的方法
       * */
@@ -105,6 +130,8 @@
           this.goods[type].list.push(...res.data.list);
           //将页数加一
           this.goods[type].page += 1;
+          //最后将上拉加载更多进行刷新，从而加载更多的数据
+          this.$refs.scroll.finishPullUp();
         })
       },
 
