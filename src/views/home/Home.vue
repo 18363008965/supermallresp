@@ -1,18 +1,15 @@
 <template>
-  <div id="home">
+  <div id="home" class="wrapper">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
-    <home-swiper :banners="banners"/>
-    <recommend-view :recommends="recommends"/>
-    <feature-view/>
-    <tab-control :titles="['流行','新款','流行']" class="tab-control" @tabClick="tabClick"/>
-    <goods-list :goods="showGoods"/>
-    <ul>
-      <li>1111</li>
-      <li>1111</li>
-      <li>1111</li>
-      <li>1111</li>
-      <li>1111</li>
-    </ul>
+    <scroll class="content" ref="scroll">
+      <home-swiper :banners="banners"/>
+      <recommend-view :recommends="recommends"/>
+      <feature-view/>
+      <tab-control :titles="['流行','新款','流行']" class="tab-control" @tabClick="tabClick"/>
+      <goods-list :goods="showGoods"/>
+    </scroll>
+
+    <back-top @click.native="backClick"/>
   </div>
 </template>
 
@@ -24,6 +21,8 @@
   import NavBar from 'components/common/navbar/NavBar';
   import TabControl from "components/content/tabControl/TabControl";
   import GoodsList from "components/content/goods/GoodsList";
+  import Scroll from "components/common/scroll/Scroll";
+  import BackTop from "components/content/backTop/BackTop";
 
   import { getHomeMultidata, getHomeGoods } from "../../network/home";
 
@@ -35,7 +34,9 @@
       FeatureView,
       NavBar,
       TabControl,
-      GoodsList
+      GoodsList,
+      Scroll,
+      BackTop
     },
     data() {
       return {
@@ -81,6 +82,9 @@
             break;
         }
       },
+      backClick() {
+        this.$refs.scroll.scrollTo(0,0);
+      },
 
       /*
       * 网络请求相关的方法
@@ -111,8 +115,9 @@
 
 <style scoped>
   #home {
-    padding-top: 44px;
-
+    /*padding-top: 44px;*/
+    height: 100vh;
+    position: relative;
   }
 
   .home-nav {
@@ -130,5 +135,15 @@
     position: sticky; /*该属性可以实现页面中的滚动效果，但是在使用scroll框架就不在适用*/
     top: 44px;
     z-index: 9;
+  }
+
+  .content {
+    overflow: hidden;
+
+    position: absolute;
+    top: 44px;
+    bottom: 49px;
+    left: 0;
+    right: 0;
   }
 </style>
