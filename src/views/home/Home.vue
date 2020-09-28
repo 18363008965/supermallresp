@@ -15,7 +15,7 @@
       <!--本周流行-->
       <feature-view/>
       <!--商品分类切换控制栏-->
-      <tab-control :titles="['流行','新款','流行']" class="tab-control" @tabClick="tabClick"/>
+      <tab-control :titles="['流行','新款','精选']" class="tab-control" @tabClick="tabClick"/>
       <!--商品展示-->
       <goods-list :goods="showGoods"/>
     </scroll>
@@ -36,6 +36,7 @@
   import BackTop from "components/content/backTop/BackTop";
 
   import { getHomeMultidata, getHomeGoods } from "../../network/home";
+  import {debounce} from "../../common/utils";
 
   export default {
     name: "Home",
@@ -74,9 +75,10 @@
     },
     mounted() {
       //3.图片加载完成监听事件
+      const refresh = debounce(this.$refs.scroll.refresh, 50);
       this.$bus.$on('itemImageLoad', () => {
         //最后进行刷新图片的高度
-        this.$refs.scroll.refresh();
+        refresh();
       });
     },
     computed: {
@@ -136,7 +138,6 @@
           this.$refs.scroll.finishPullUp();
         })
       },
-
 
     }
   }
