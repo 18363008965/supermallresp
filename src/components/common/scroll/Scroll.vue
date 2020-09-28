@@ -47,14 +47,14 @@
     methods: {
       //实时滚动的位置，通过这个来控制回到顶部图标是否显示
       scrollTo(x, y, time=300) {
-        this.scroll.scrollTo(x, y , time);
+        this.scroll && this.scroll.scrollTo(x, y , time);
       },
       finishPullUp(){
         //上拉加载更多最后的刷新操作
-        this.scroll.finishPullUp();
+        this.scroll && this.scroll.finishPullUp();
       },
       refresh() {
-        this.scroll.refresh();
+        this.scroll && this.scroll.refresh();
       }
     }
   }

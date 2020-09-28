@@ -71,11 +71,13 @@
       this.getHomeGoods('new');
       this.getHomeGoods('sell');
 
+    },
+    mounted() {
       //3.图片加载完成监听事件
       this.$bus.$on('itemImageLoad', () => {
         //最后进行刷新图片的高度
         this.$refs.scroll.refresh();
-      })
+      });
     },
     computed: {
       showGoods(){
