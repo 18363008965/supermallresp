@@ -4,9 +4,9 @@
 import axios from 'axios'
 
 export function request(config) {
-  // 1.创建axios的实例,新地址为：http://152.136.185.210:8000/api/z8
+  // 1.创建axios的实例,新地址为：
   const instance = axios.create({
-    baseURL: 'http://152.136.185.210:8000/api/z8',
+    baseURL: '',
     timeout: 5000
   })
 

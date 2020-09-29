@@ -1,8 +1,8 @@
 /*
 * vue-router的配置文件
 * */
-import Vue from "vue";
-import VueRouter from "vue-router";
+import Vue from 'vue';
+import VueRouter from 'vue-router'
 
 Vue.use(VueRouter);
 

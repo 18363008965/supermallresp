@@ -7,7 +7,7 @@
                  @tabClick="tabClick" ref="tabControl1" v-show="isTabFixed"/>
     <!--scroll是滚动效果组件-->
     <scroll class="content" ref="scroll"
-            :probeType="3"
+            :probe-type="3"
             @scroll="contentScroll"
             :pull-up-load="true"
             @pullingUp="loadMore">
@@ -70,6 +70,21 @@
         saveY: 0
       }
     },
+    computed: {
+      showGoods(){
+        return this.goods[this.currentType].list;
+      }
+    },
+    destroyed() {
+      console.log('home destroyed');
+    },
+    activated() {
+      this.$refs.scroll.scrollTo(0, this.saveY, 0);
+      this.$refs.scroll.refresh();
+    },
+    deactivated() {
+      this.saveY = this.$refs.scroll.getScrollY();
+    },
     created() {
       // 1.请求多个数据
       this.getHomeMultidata();
@@ -87,20 +102,6 @@
         //最后进行刷新图片的高度
         refresh();
       });
-    },
-    computed: {
-      showGoods(){
-        return this.goods[this.currentType].list;
-      }
-    },
-    destroyed() {
-    },
-    activated() {
-      this.$refs.scroll.scrollTo(0, this.saveY, 0);
-      this.$refs.scroll.refresh();
-    },
-    deactivated() {
-      this.saveY = this.$refs.scroll.getScrollY();
     },
     methods: {
       /*
@@ -139,7 +140,7 @@
         this.getHomeGoods(this.currentType);
       },
       swiperImageLoad() {
-        this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop;
+        this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
       },
       /*
       * 网络请求相关的方法
@@ -180,23 +181,12 @@
     background-color: var(--color-tint);
     color: #fff;
 
-    /*在使用浏览器原生滚动时，为了让导航不跟着一起滚动的样式设置
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    z-index: 9;*/
-  }
-
-  /*.tab-control {
-    position: sticky; !*该属性可以实现页面中的滚动效果，但是在使用scroll框架就不在适用*!
-    top: 44px;
-    z-index: 9;
-  }*/
-
-  .tab-control {
-    position: relative;
-    z-index: 9;
+    /*在使用浏览器原生滚动时, 为了让导航不跟随一起滚动*/
+    /*position: fixed;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*top: 0;*/
+    /*z-index: 9;*/
   }
 
   .content {
@@ -208,4 +198,15 @@
     left: 0;
     right: 0;
   }
+
+  .tab-control {
+    position: relative;
+    z-index: 9;
+  }
+
+  /*.content {*/
+  /*height: calc(100% - 93px);*/
+  /*overflow: hidden;*/
+  /*margin-top: 44px;*/
+  /*}*/
 </style>
