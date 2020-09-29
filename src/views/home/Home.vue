@@ -2,6 +2,9 @@
   <div id="home" class="wrapper">
     <!--导航栏-->
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
+    <!--新增一个tabcontrol控制选项卡组件，用于在滚动时的吸顶效果的占位-->
+    <tab-control :titles="['流行','新款','精选']" class="tab-control"
+                 @tabClick="tabClick" ref="tabControl1" v-show="isTabFixed"/>
     <!--scroll是滚动效果组件-->
     <scroll class="content" ref="scroll"
             :probeType="3"
@@ -9,13 +12,14 @@
             :pull-up-load="true"
             @pullingUp="loadMore">
       <!--商品轮播图-->
-      <home-swiper :banners="banners"/>
+      <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad"/>
       <!--推荐商品-->
       <recommend-view :recommends="recommends"/>
       <!--本周流行-->
       <feature-view/>
       <!--商品分类切换控制栏-->
-      <tab-control :titles="['流行','新款','精选']" class="tab-control" @tabClick="tabClick"/>
+      <tab-control :titles="['流行','新款','精选']"
+                   @tabClick="tabClick" ref="tabControl2"/>
       <!--商品展示-->
       <goods-list :goods="showGoods"/>
     </scroll>
@@ -60,7 +64,10 @@
           'sell': {page:0, list:[]}
         },
         currentType: 'pop', //传入商品数据的类型的初始值，初始值为pop,
-        isShowBackTop: false
+        isShowBackTop: false,
+        tabOffsetTop: 0,
+        isTabFixed: false,
+        saveY: 0
       }
     },
     created() {
@@ -86,6 +93,15 @@
         return this.goods[this.currentType].list;
       }
     },
+    destroyed() {
+    },
+    activated() {
+      this.$refs.scroll.scrollTo(0, this.saveY, 0);
+      this.$refs.scroll.refresh();
+    },
+    deactivated() {
+      this.saveY = this.$refs.scroll.getScrollY();
+    },
     methods: {
       /*
       * 事件监听相关的方法
@@ -102,18 +118,28 @@
             this.currentType = 'sell';
             break;
         }
+
+        //将两个tabControl的点击时的index保持一致，使其都等于当前点击的index的值
+        this.$refs.tabControl1.currentIndex = index;
+        this.$refs.tabControl2.currentIndex = index;
       },
       backClick() {
         //实时监听滚动的位置
         this.$refs.scroll.scrollTo(0,0);
       },
       contentScroll(position){
-        //回到顶部图标是否显示
+        //1.回到顶部图标是否显示
         this.isShowBackTop = (-position.y) > 1000;
+
+        //2.决定tabControl是否吸顶（即position：fixed是否是这个属性）
+        this.isTabFixed = (-position.y) > this.tabOffsetTop;
       },
       loadMore(){
         //上拉加载更多也就是再一次的请求商品数据
         this.getHomeGoods(this.currentType);
+      },
+      swiperImageLoad() {
+        this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop;
       },
       /*
       * 网络请求相关的方法
@@ -154,16 +180,22 @@
     background-color: var(--color-tint);
     color: #fff;
 
+    /*在使用浏览器原生滚动时，为了让导航不跟着一起滚动的样式设置
     position: fixed;
     left: 0;
     right: 0;
     top: 0;
-    z-index: 9;
+    z-index: 9;*/
   }
 
-  .tab-control {
-    position: sticky; /*该属性可以实现页面中的滚动效果，但是在使用scroll框架就不在适用*/
+  /*.tab-control {
+    position: sticky; !*该属性可以实现页面中的滚动效果，但是在使用scroll框架就不在适用*!
     top: 44px;
+    z-index: 9;
+  }*/
+
+  .tab-control {
+    position: relative;
     z-index: 9;
   }
 
