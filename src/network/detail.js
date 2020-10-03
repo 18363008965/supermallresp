@@ -12,6 +12,12 @@ export function getDetail(iid) {
   })
 }
 
+export function getRecommend() {
+  return request({
+    url: '/recommend'
+  })
+}
+
 /*
 * 将详情页中的数据封装到一个类中
 * */
