@@ -6,7 +6,7 @@ import axios from 'axios'
 export function request(config) {
 
   const instance = axios.create({
-    baseURL: '',
+    baseURL: 'xxxxx',
     timeout: 5000
   })
 
