@@ -27,8 +27,13 @@
 
   import Scroll from "../../components/common/scroll/Scroll";
 
+  import {debounce} from "../../common/utils";
+
+  import {itemImgListenerMixin} from "../../common/mixin";
+
   export default {
     name: "Detail",
+    mixins: [itemImgListenerMixin],
     data() {
       return {
         iid: null,
@@ -38,7 +43,7 @@
         detailInfo: {},
         paramInfo: {},
         commentInfo: {},
-        recommend: []
+        recommend: [],
       }
     },
     components: {
@@ -83,6 +88,12 @@
       getRecommend().then(res => {
         this.recommend = res.data.list;
       })
+    },
+    destroyed() {
+      //取消图片加载的监听事件
+      this.$bus.$off(this.itemImgListener);
+    },
+    mounted() {
     },
     methods: {
       loadMore() {
