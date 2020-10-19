@@ -1,14 +1,14 @@
 <template>
   <div id="detail">
-    <detail-nav-bar class="detail-nav"/>
+    <detail-nav-bar class="detail-nav" @titleClick="titleClick"/>
     <scroll class="content" ref="scroll">
       <detail-swiper :top-images="topImages"/>
       <detail-base-info :goods="goods"></detail-base-info>
       <detail-shop-info :shop="shop"/>
       <detail-goods-info :detail-info="detailInfo" @imageLoad="loadMore"/>
-      <detail-param-info :param-info="paramInfo"/>
-      <detail-comment-info :comment-info="commentInfo"/>
-      <goods-list :goods="recommend"/>
+      <detail-param-info ref="params" :param-info="paramInfo"/>
+      <detail-comment-info ref="comment" :comment-info="commentInfo"/>
+      <goods-list ref="recommend" :goods="recommend"/>
     </scroll>
   </div>
 </template>
@@ -44,6 +44,8 @@
         paramInfo: {},
         commentInfo: {},
         recommend: [],
+        themeTopYs: [],
+        getThemeTopY: null
       }
     },
     components: {
@@ -88,6 +90,16 @@
       getRecommend().then(res => {
         this.recommend = res.data.list;
       })
+
+      //3.为themeTopYs赋值，此处必须在所有的数据以及图片加载完成以后在来获取元素的offSetTop的值，不然元素加载不完所获取的offSetTop的值不正确
+      //为了提高性能，重复多次的来获取，此处使用了防抖函数使得offTopSet的值只获取一次即可。
+      this.getThemeTopY = debounce(() => {
+        this.themeTopYs = [];
+        this.themeTopYs.push(0);
+        this.themeTopYs.push(this.$refs.params.$el.offsetTop);
+        this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
+        this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
+      },100);
     },
     destroyed() {
       //取消图片加载的监听事件
@@ -97,7 +109,14 @@
     },
     methods: {
       loadMore() {
+        //刷新，拉下加载更多
         this.$refs.scroll.refresh();
+        //调用点击tabControl标题点击事件的赋值函数
+        this.getThemeTopY();
+      },
+      titleClick(index) {
+        // console.log(index);
+        this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 100)
       }
     }
   }
