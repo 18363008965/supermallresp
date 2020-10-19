@@ -10,6 +10,8 @@
       <detail-comment-info ref="comment" :comment-info="commentInfo"/>
       <goods-list ref="recommend" :goods="recommend"/>
     </scroll>
+    <detail-bottom-bar></detail-bottom-bar>
+    <back-top @click.native="backClick" v-show="isShowBackTop"/>
   </div>
 </template>
 
@@ -22,6 +24,7 @@
   import DetailParamInfo from "./childComps/DetailParamInfo";
   import DetailCommentInfo from "./childComps/DetailCommentInfo";
   import GoodsList from "../../components/content/goods/GoodsList";
+  import DetailBottomBar from "./childComps/DetailBottomBar";
 
   import {getDetail, Goods, Shop, GoodsParam, getRecommend} from "../../network/detail";
 
@@ -29,11 +32,11 @@
 
   import {debounce} from "../../common/utils";
 
-  import {itemImgListenerMixin} from "../../common/mixin";
+  import {itemImgListenerMixin, backTopMixin} from "../../common/mixin";
 
   export default {
     name: "Detail",
-    mixins: [itemImgListenerMixin],
+    mixins: [itemImgListenerMixin, backTopMixin],
     data() {
       return {
         iid: null,
@@ -58,7 +61,8 @@
       DetailParamInfo,
       DetailCommentInfo,
       GoodsList,
-      Scroll
+      Scroll,
+      DetailBottomBar
     },
     created() {
       // 1.保存传入的iid
@@ -66,7 +70,6 @@
       //2.根据iid获取详情数据
       getDetail(this.iid).then(res => {
         //1.请求轮播图中要显示的图片数据
-        console.log(res);
         const data = res.result;
         this.topImages = data.itemInfo.topImages;
 
@@ -122,7 +125,10 @@
         this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 100)
       },
       contentScroll(position) {
-        //监听滚动的位置，进行赋值，使其滚动到某一个位置时显示对应的标题
+        //1.回到顶部图标是否显示
+        this.isShowBackTop = (-position.y) > 1000;
+
+        //2.监听滚动的位置，进行赋值，使其滚动到某一个位置时显示对应的标题
         const positionY = -position.y;
         let length = this.themeTopYs.length;
         for (let i = 0; i < length; i++) {
@@ -144,7 +150,9 @@
           }
         }
 
-      }
+      },
+
+
     }
   }
 </script>
@@ -164,6 +172,6 @@
   }
 
   .content {
-    height: calc(100% - 44px);
+    height: calc(100% - 44px - 49px);
   }
 </style>

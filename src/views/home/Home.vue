@@ -37,10 +37,9 @@
   import TabControl from "components/content/tabControl/TabControl";
   import GoodsList from "components/content/goods/GoodsList";
   import Scroll from "components/common/scroll/Scroll";
-  import BackTop from "components/content/backTop/BackTop";
 
   import { getHomeMultidata, getHomeGoods } from "../../network/home";
-  import {itemImgListenerMixin} from "../../common/mixin";
+  import {itemImgListenerMixin, backTopMixin} from "../../common/mixin";
 
   export default {
     name: "Home",
@@ -52,9 +51,8 @@
       TabControl,
       GoodsList,
       Scroll,
-      BackTop
     },
-    mixins: [itemImgListenerMixin],
+    mixins: [itemImgListenerMixin, backTopMixin],
     data() {
       return {
         banners: [],
@@ -65,7 +63,6 @@
           'sell': {page:0, list:[]}
         },
         currentType: 'pop', //传入商品数据的类型的初始值，初始值为pop,
-        isShowBackTop: false,
         tabOffsetTop: 0,
         isTabFixed: false,
         saveY: 0,
@@ -77,7 +74,7 @@
       }
     },
     destroyed() {
-      console.log('home destroyed');
+      //console.log('home destroyed');
     },
     activated() {
       this.$refs.scroll.scrollTo(0, this.saveY, 0);
@@ -123,10 +120,6 @@
         //将两个tabControl的点击时的index保持一致，使其都等于当前点击的index的值
         this.$refs.tabControl1.currentIndex = index;
         this.$refs.tabControl2.currentIndex = index;
-      },
-      backClick() {
-        //实时监听滚动的位置
-        this.$refs.scroll.scrollTo(0,0);
       },
       contentScroll(position){
         //1.回到顶部图标是否显示

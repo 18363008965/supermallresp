@@ -2,6 +2,7 @@
 * 混入的js文件
 * */
 import {debounce} from "./utils";
+import BackTop from "../components/content/backTop/BackTop";
 
 export const itemImgListenerMixin = {
   data() {
@@ -19,5 +20,23 @@ export const itemImgListenerMixin = {
     }
 
     this.$bus.$on('itemImageLoad', this.itemImgListener);
+  }
+}
+
+//点击回到顶部空间的混入代码
+export const backTopMixin = {
+  components: {
+    BackTop,
+  },
+  data() {
+    return {
+      isShowBackTop: false
+    };
+  },
+  methods: {
+    backClick() {
+      //实时监听滚动的位置
+      this.$refs.scroll.scrollTo(0,0);
+    }
   }
 }
