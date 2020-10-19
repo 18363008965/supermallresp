@@ -1,7 +1,7 @@
 <template>
   <div id="detail">
-    <detail-nav-bar class="detail-nav" @titleClick="titleClick"/>
-    <scroll class="content" ref="scroll">
+    <detail-nav-bar class="detail-nav" @titleClick="titleClick" ref="nav"/>
+    <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
       <detail-swiper :top-images="topImages"/>
       <detail-base-info :goods="goods"></detail-base-info>
       <detail-shop-info :shop="shop"/>
@@ -45,7 +45,8 @@
         commentInfo: {},
         recommend: [],
         themeTopYs: [],
-        getThemeTopY: null
+        getThemeTopY: null,
+        currentIndex: 0
       }
     },
     components: {
@@ -99,6 +100,8 @@
         this.themeTopYs.push(this.$refs.params.$el.offsetTop);
         this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
         this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
+        //为themeTopYs赋值一个number类型的最大值
+        this.themeTopYs.push(Number.MAX_VALUE)
       },100);
     },
     destroyed() {
@@ -117,6 +120,30 @@
       titleClick(index) {
         // console.log(index);
         this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 100)
+      },
+      contentScroll(position) {
+        //监听滚动的位置，进行赋值，使其滚动到某一个位置时显示对应的标题
+        const positionY = -position.y;
+        let length = this.themeTopYs.length;
+        for (let i = 0; i < length; i++) {
+          //此处有三种条件判断方式
+          //方式一，直接进行判断
+          /*if (this.currentIndex != i &&
+            ((i < length - 1 && positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i+1])
+              || (i == length - 1 && positionY >= this.themeTopYs[i]))) {
+              //进行赋值
+              this.currentIndex = i;
+              this.$refs.nav.currentIndex = this.currentIndex;
+          }*/
+
+          //方式二：给themeTopYs赋值一个int类型的最大值，之后在进行比较，直接比较i在某一个区间内的值即：
+          if (this.currentIndex !=i &&
+            (positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i+1])) {
+            this.currentIndex = i;
+            this.$refs.nav.currentIndex = this.currentIndex;
+          }
+        }
+
       }
     }
   }
