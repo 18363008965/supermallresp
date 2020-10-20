@@ -10,7 +10,7 @@
       <detail-comment-info ref="comment" :comment-info="commentInfo"/>
       <goods-list ref="recommend" :goods="recommend"/>
     </scroll>
-    <detail-bottom-bar></detail-bottom-bar>
+    <detail-bottom-bar @addToCart="addToCart"/>
     <back-top @click.native="backClick" v-show="isShowBackTop"/>
   </div>
 </template>
@@ -151,7 +151,18 @@
         }
 
       },
+      addToCart() {
+        //1.获取加入购物车的数据
+        const obj = {};
+        obj.iid = this.iid;
+        obj.image = this.topImages[0];
+        obj.title = this.goods.title;
+        obj.desc = this.goods.desc;
+        obj.price = this.goods.realPrice;
 
+        //2.将购物车数据添加到vuex中
+        this.$store.dispatch('addCart', obj)
+      }
 
     }
   }
