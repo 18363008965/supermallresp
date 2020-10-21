@@ -8,6 +8,7 @@ const mutations = {
   },
   //将新商品添加到购物车中
   [ADD_TO_CART](state, payload) {
+    payload.checked = true;
     state.cartList.push(payload);
   }
 }
