@@ -33,7 +33,9 @@
         return this.cartList.filter(item => item.checked).length;
       },
       isSelectAll() {
-        return this.cartList.find(item => item.checked === false) === undefined;
+        //首先判断一下如果购物车中没有商品，那么不应该显示全选中状态，当有商品时才显示全选中状态
+        if (this.cartList.length == 0) return false;
+          return this.cartList.find(item => item.checked === false) === undefined;
       }
     },
     methods: {

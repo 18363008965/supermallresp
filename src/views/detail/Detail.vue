@@ -34,6 +34,8 @@
 
   import {itemImgListenerMixin, backTopMixin} from "../../common/mixin";
 
+  import {mapActions} from 'vuex';
+
   export default {
     name: "Detail",
     mixins: [itemImgListenerMixin, backTopMixin],
@@ -114,6 +116,9 @@
     mounted() {
     },
     methods: {
+      ...mapActions([
+        'addCart'
+      ]),
       loadMore() {
         //刷新，拉下加载更多
         this.$refs.scroll.refresh();
@@ -160,8 +165,15 @@
         obj.desc = this.goods.desc;
         obj.price = this.goods.realPrice;
 
-        //2.将购物车数据添加到vuex中
-        this.$store.dispatch('addCart', obj)
+        //2.将购物车数据添加到vuex中，方式一
+        // this.$store.dispatch('addCart', obj).then(res => {
+        //   console.log(res);
+        // })
+
+        //2.将购物车数据添加到vuex中，方式二
+        this.addCart(obj).then(res => {
+          //console.log(res);
+        })
       }
 
     }

@@ -27,4 +27,47 @@
 *
 * 6.vuex中的知识点总结
 *   vuex中的mapGetters函数是vuex中的getters辅助函数，用于将getters中的属性映射到相应的组件中
+*
+*
+* 7.vuex中的知识点总结
+*   （1）.mapGetters的使用：mapGetters的作用是将vuex中的getters中的属性和方法映射到对应的所使用的组件中
+*       首先需要先从vuex中导入mapGetters，之后在computed计算属性中进行使用
+*       import {mapGetters} from ‘vuex’;
+*       computed: {
+*         ...mapGetters([
+*           'xxx属性',
+*           'xxx方法'
+*         ])
+*       }
+*
+*       还可以使用对象的使用方式即：
+*       ...mapGetters({
+*         add: 'xxx属性或者方法'
+*       })
+*   （2）.mapActions的使用：mapActions的作用是将vuex中的actions的方法映射到对应的所使用的组件中
+*       首先需要先从vuex中导入mapActions，之后在methods中使用
+*       import mapActions from 'vuex';
+*       methods: {
+*         ...mapActions([
+*           'xxx方法'
+*         ])
+*       }
+*
+*     还可以使用对象的使用方式即：
+*     ...mapActions({
+*       xxx: 'xxx方法'
+*     })
+*
+*   （3）vuex中的actions中返回Promise方法
+*       在vuex中的actions还可以返回Promise，之后在对应的组件中直接使用then函数获取对应的数据
+*       即：
+*       return new Promise((resolve, reject) => {
+*         //业务操作.....
+*         resolve('xxxxx数据');
+*       })
+*
+*       在组件中使用
+*       xxx.then(res => {
+*         //业务操作.....
+*       })
 * */
