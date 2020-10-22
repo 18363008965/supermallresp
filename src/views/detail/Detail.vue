@@ -12,6 +12,7 @@
     </scroll>
     <detail-bottom-bar @addToCart="addToCart"/>
     <back-top @click.native="backClick" v-show="isShowBackTop"/>
+    <toast ref="toast"></toast>
   </div>
 </template>
 
@@ -25,6 +26,7 @@
   import DetailCommentInfo from "./childComps/DetailCommentInfo";
   import GoodsList from "../../components/content/goods/GoodsList";
   import DetailBottomBar from "./childComps/DetailBottomBar";
+  import Toast from "../../components/common/toast/Toast";
 
   import {getDetail, Goods, Shop, GoodsParam, getRecommend} from "../../network/detail";
 
@@ -64,7 +66,8 @@
       DetailCommentInfo,
       GoodsList,
       Scroll,
-      DetailBottomBar
+      DetailBottomBar,
+      Toast
     },
     created() {
       // 1.保存传入的iid
@@ -173,6 +176,8 @@
         //2.将购物车数据添加到vuex中，方式二
         this.addCart(obj).then(res => {
           //console.log(res);
+          //进行弹窗显示
+          this.$toast({message: '加入购物车成功'})
         })
       }
 

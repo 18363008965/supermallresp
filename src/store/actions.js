@@ -12,7 +12,7 @@ const actions = {
         payload.count = 1;
         context.commit(ADD_TO_CART, payload);
       }
-      // resolve()
+      resolve()
     })
   }
 

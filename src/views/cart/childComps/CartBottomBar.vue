@@ -3,7 +3,7 @@
     <check-button class="select-all" @checkBtnClick="checkBtnClick" v-model="isSelectAll"></check-button>
     <span>全选</span>
     <span class="total-price">合计: ¥{{totalPrice}}</span>
-    <span class="buy-product">去计算({{buyLength}})</span>
+    <span class="buy-product">去支付({{buyLength}})</span>
   </div>
 </template>
 
@@ -53,7 +53,7 @@
             item.checked = false;
           })
         }
-      }
+      },
     }
   }
 </script>
