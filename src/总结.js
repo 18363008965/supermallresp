@@ -70,4 +70,33 @@
 *       xxx.then(res => {
 *         //业务操作.....
 *       })
+*
+*
+*  8.FastClick插件的使用
+*    作用：fastclick插件的作用是：解决移动端的点击时延迟300毫秒的问题，使其点击切换不在有延迟
+*    ①安装插件
+*     npm install fastclick --save
+*
+*    ②在main.js文件中导入插件
+*     import FastCLick from ‘fastclick’
+*
+*    ③调用attach方法进行使用
+*     FastClick.attach(document.body);
+*
+*
+* 9.vue-lazyload插件的使用
+*   作用：vue-lazyload的作用是图片懒加载，即：当使用图片时在进行加载显示
+*   ①安装插件
+*     npm install vue-lazyload --save
+*
+*   ②在main.js中导入插件
+*     import LazyLoad from 'vue-lazyload'
+*
+*   ③注册插件
+*     Vue.use(LazyLoad)
+*
+*   ④在对应的组件中使用v-lazy进行懒加载对应的图片，此处以在GoodsListItem组件中使用为例
+*     <img v-lazy="showImage" alt="" @load="imgLoad">
+*
+*
 * */
